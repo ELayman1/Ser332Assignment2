@@ -5,7 +5,6 @@
 #include "glut.h"
 #include <math.h>
 
-void init();
 void display();
 void resizeWindow(int newWidth, int newHeight);
 void mySpecial(int key, int x, int y);
@@ -13,17 +12,18 @@ void myKeyboard(unsigned char key, int x, int y);
 void orientMe(float ang);
 void moveMeFlat(int i);
 void moveMeStrafe(int i);
-void createDeskSet1();
 
 int width = 1500;
 int height = 700;
 
 float cameraY = 5.0f;
-float cameraX = 20.0f;
-float cameraZ = 20.0f;
+float cameraX = 0.0f;
+float cameraZ = -50.0f;
 
 float x = 0.0f, y = 1.75f, z = 0.0f;
 float lx = 0.0f, ly = 0.0f, lz = -1.0f;
+
+float posX = 0.0f;
 
 float aspectRatio = 1;
 float left, bottom = -1;
@@ -31,8 +31,9 @@ float right, top = 1;
 
 float scaleFactor = 1;
 float angle = 0;
+float rotAngle = 0;
 
-GLuint set1DL;
+bool rise = true;
 
 int main(int argc, char ** argv) {
 
@@ -41,7 +42,7 @@ int main(int argc, char ** argv) {
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(width, height);
 	glutCreateWindow("Ser332 Assignment2");
-	init();
+
 	// Callback functions
 	glutDisplayFunc(display);
 	glutSpecialFunc(mySpecial);
@@ -70,12 +71,6 @@ void resizeWindow(int newWidth, int newHeight) {
 
 	width = newWidth;
 	height = newHeight;
-}
-
-void init() {
-	glShadeModel(GL_SMOOTH);
-	glEnable(GL_DEPTH_TEST);
-	createDeskSet1();
 }
 
 void display() {
@@ -361,102 +356,224 @@ void display() {
 	glVertex3f(-100.0f, 30.0f, 100.0f);
 	glEnd();
 
-	glCallList(set1DL);
-	
-	//---------------------------------------
-
-	glClearColor(0.4f, 0.4f, 0.4f, 0.0f);
-
-	// Viewport 2: Right
-	glViewport(width * .75, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(left, right, bottom, top);
-	glScissor(width * .75, 0, width, height);
-	glEnable(GL_SCISSOR_TEST);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-
+	glPushMatrix();
+	glTranslatef(posX, 0, 0);
+	//Table Top
+	glColor3f(0.4f, 0.2f, 0.0f);
 	glBegin(GL_QUADS);
-	glVertex2f(-0.5f, 0.5f);
-	glVertex2f(0.5f, 0.5f);
-	glVertex2f(0.5f, -0.5f);
-	glVertex2f(-0.5f, -0.5f);
+	glVertex3f(-5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(-5.0f + posX, 4.0f, 4.0f);
+	glEnd();
+	glColor3f(0.45f, 0.25f, 0.0f);
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(5.0f + posX, 4.5f, -4.0f);
+	glVertex3f(-5.0f + posX, 4.5f, -4.0f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(5.0f + posX, 4.5f, 4.0f);
+	glVertex3f(-5.0f + posX, 4.5f, 4.0f);
+	glEnd();
+	glColor3f(0.43f, 0.23f, 0.0f);
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(5.0f + posX, 4.5f, -4.0f);
+	glVertex3f(5.0f + posX, 4.5f, 4.0f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(-5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(-5.0f + posX, 4.5f, -4.0f);
+	glVertex3f(-5.0f + posX, 4.5f, 4.0f);
+	glEnd();
+	glColor3f(0.4f, 0.2f, 0.0f);
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.5f, -4.0f);
+	glVertex3f(5.0f + posX, 4.5f, -4.0f);
+	glVertex3f(5.0f + posX, 4.5f, 4.0f);
+	glVertex3f(-5.0f + posX, 4.5f, 4.0f);
 	glEnd();
 
-	glutPostRedisplay();
-	glutSwapBuffers();
+	//Leg 1 
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(-4.5f + posX, 4.0f, -4.0f);
+	glVertex3f(-4.5f + posX, 4.0f, -3.5f);
+	glVertex3f(-5.0f + posX, 4.0f, -3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(-4.5f + posX, 4.0f, -4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, -4.0f);
+	glVertex3f(-5.0f + posX, 1.0f, -4.0f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, -3.5f);
+	glVertex3f(-4.5f + posX, 4.0f, -3.5f);
+	glVertex3f(-4.5f + posX, 1.0f, -3.5f);
+	glVertex3f(-5.0f + posX, 1.0f, -3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(-5.0f + posX, 1.0f, -4.0f);
+	glVertex3f(-5.0f + posX, 1.0f, -3.5f);
+	glVertex3f(-5.0f + posX, 4.0f, -3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-4.5f + posX, 4.0f, -4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, -4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, -3.5f);
+	glVertex3f(-4.5f + posX, 4.0f, -3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 1.0f, -4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, -4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, -3.5f);
+	glVertex3f(-5.0f + posX, 1.0f, -3.5f);
+	glEnd();
 
-}
+	//Leg 2
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(4.5f + posX, 4.0f, -4.0f);
+	glVertex3f(4.5f + posX, 4.0f, -3.5f);
+	glVertex3f(5.0f + posX, 4.0f, -3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(4.5f + posX, 4.0f, -4.0f);
+	glVertex3f(4.5f + posX, 1.0f, -4.0f);
+	glVertex3f(5.0f + posX, 1.0f, -4.0f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, -3.5f);
+	glVertex3f(4.5f + posX, 4.0f, -3.5f);
+	glVertex3f(4.5f + posX, 1.0f, -3.5f);
+	glVertex3f(5.0f + posX, 1.0f, -3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, -4.0f);
+	glVertex3f(5.0f + posX, 1.0f, -4.0f);
+	glVertex3f(5.0f + posX, 1.0f, -3.5f);
+	glVertex3f(5.0f + posX, 4.0f, -3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(4.5f + posX, 4.0f, -4.0f);
+	glVertex3f(4.5f + posX, 1.0f, -4.0f);
+	glVertex3f(4.5f + posX, 1.0f, -3.5f);
+	glVertex3f(4.5f + posX, 4.0f, -3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 1.0f, -4.0f);
+	glVertex3f(4.5f + posX, 1.0f, -4.0f);
+	glVertex3f(4.5f + posX, 1.0f, -3.5f);
+	glVertex3f(5.0f + posX, 1.0f, -3.5f);
+	glEnd();
 
-void mySpecial(int key, int x, int y) {
+	//Leg 3
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(4.5f + posX, 4.0f, 4.0f);
+	glVertex3f(4.5f + posX, 4.0f, 3.5f);
+	glVertex3f(5.0f + posX, 4.0f, 3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(4.5f + posX, 4.0f, 4.0f);
+	glVertex3f(4.5f + posX, 1.0f, 4.0f);
+	glVertex3f(5.0f + posX, 1.0f, 4.0f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, 3.5f);
+	glVertex3f(4.5f + posX, 4.0f, 3.5f);
+	glVertex3f(4.5f + posX, 1.0f, 3.5f);
+	glVertex3f(5.0f + posX, 1.0f, 3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(5.0f + posX, 1.0f, 4.0f);
+	glVertex3f(5.0f + posX, 1.0f, 3.5f);
+	glVertex3f(5.0f + posX, 4.0f, 3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(4.5f + posX, 4.0f, 4.0f);
+	glVertex3f(4.5f + posX, 1.0f, 4.0f);
+	glVertex3f(4.5f + posX, 1.0f, 3.5f);
+	glVertex3f(4.5f + posX, 4.0f, 3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(5.0f + posX, 1.0f, 4.0f);
+	glVertex3f(4.5f + posX, 1.0f, 4.0f);
+	glVertex3f(4.5f + posX, 1.0f, 3.5f);
+	glVertex3f(5.0f + posX, 1.0f, 3.5f);
+	glEnd();
 
-	switch (key) {
-	case GLUT_KEY_UP:
-		ly = ly + .1;
-		break;
-	case GLUT_KEY_DOWN:
-		ly = ly - .1;
-		break;
-	case GLUT_KEY_LEFT:
-		angle -= 0.2f;
-		orientMe(angle);
-		break;
-	case GLUT_KEY_RIGHT:
-		angle += 0.2f;
-		orientMe(angle);
-		break;
+	//Leg 4
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(-4.5f + posX, 4.0f, 4.0f);
+	glVertex3f(-4.5f + posX, 4.0f, 3.5f);
+	glVertex3f(-5.0f + posX, 4.0f, 3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(-4.5f + posX, 4.0f, 4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, 4.0f);
+	glVertex3f(-5.0f + posX, 1.0f, 4.0f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, 3.5f);
+	glVertex3f(-4.5f + posX, 4.0f, 3.5f);
+	glVertex3f(-4.5f + posX, 1.0f, 3.5f);
+	glVertex3f(-5.0f + posX, 1.0f, 3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 4.0f, 4.0f);
+	glVertex3f(-5.0f + posX, 1.0f, 4.0f);
+	glVertex3f(-5.0f + posX, 1.0f, 3.5f);
+	glVertex3f(-5.0f + posX, 4.0f, 3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-4.5f + posX, 4.0f, 4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, 4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, 3.5f);
+	glVertex3f(-4.5f + posX, 4.0f, 3.5f);
+	glEnd();
+	glBegin(GL_QUADS);
+	glVertex3f(-5.0f + posX, 1.0f, 4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, 4.0f);
+	glVertex3f(-4.5f + posX, 1.0f, 3.5f);
+	glVertex3f(-5.0f + posX, 1.0f, 3.5f);
+	glEnd();
+	
+	glPopMatrix();
+
+	if (posX >= 10) {
+		//begin to shrink
+		rise = false;
+	}
+	else {
+		if (posX <= -10) {
+			rise = true;
+		}
 	}
 
-	glutPostRedisplay();
-}
-
-void myKeyboard(unsigned char key, int x, int y) {
-	switch (key)
-	{
-	case 'w':
-		moveMeFlat(20);
-		glutPostRedisplay();
-		break;
-	case 's':
-		moveMeFlat(-20);
-		glutPostRedisplay();
-		break;
-	case 'a':
-		cameraX--;
-		cameraX--;
-		glutPostRedisplay();
-		break;
-	case 'd':
-		cameraX++;
-		cameraX++;
-		glutPostRedisplay();
-		break;
-	default:
-		break;
+	if (rise) {
+		posX = posX + .05;
 	}
-}
+	else {
+		posX = posX - .05;
+	}
 
-void moveMeFlat(int i) {
-	x = x + i * (lx) * 0.1;
-	z = z + i * (lz) * 0.1;
-}
-
-void moveMeStrafe(int i) {
-
-}
-
-void orientMe(float ang) {
-	lx = sin(ang);
-	lz = -cos(ang);
-}
-
-void createDeskSet1() {
-	GLuint deskSet1DL = glGenLists(1);
-
-	glNewList(deskSet1DL, GL_COMPILE);
-
+	glPushMatrix();
+	glTranslatef(60.0f, 0.0f, 0.0f);
+	glRotatef(rotAngle, 0, 1, 1);
 	//Table Top
 	glColor3f(0.4f, 0.2f, 0.0f);
 	glBegin(GL_QUADS);
@@ -650,18 +767,97 @@ void createDeskSet1() {
 	glVertex3f(-4.5f, 1.0f, 3.5f);
 	glVertex3f(-5.0f, 1.0f, 3.5f);
 	glEnd();
-	glEndList();
 
-	//Create several desks
-	GLuint worldDL = glGenLists(1);
-	glNewList(worldDL, GL_COMPILE);
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i*10.0, 0, j * 10.0);
-			glCallList(deskSet1DL);
-			glPopMatrix();
-		}
-	glEndList();
-	set1DL = worldDL;
+	glPopMatrix();
+
+	rotAngle += .5;
+	
+	//---------------------------------------
+
+	glClearColor(0.4f, 0.4f, 0.4f, 0.0f);
+
+	// Viewport 2: Right
+	glViewport(width * .75, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(left, right, bottom, top);
+	glScissor(width * .75, 0, width, height);
+	glEnable(GL_SCISSOR_TEST);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	glBegin(GL_QUADS);
+	glVertex2f(-0.5f, 0.5f);
+	glVertex2f(0.5f, 0.5f);
+	glVertex2f(0.5f, -0.5f);
+	glVertex2f(-0.5f, -0.5f);
+	glEnd();
+
+	glutPostRedisplay();
+	glutSwapBuffers();
+
 }
+
+void mySpecial(int key, int x, int y) {
+
+	switch (key) {
+	case GLUT_KEY_UP:
+		ly = ly + .1;
+		break;
+	case GLUT_KEY_DOWN:
+		ly = ly - .1;
+		break;
+	case GLUT_KEY_LEFT:
+		angle -= 0.2f;
+		orientMe(angle);
+		break;
+	case GLUT_KEY_RIGHT:
+		angle += 0.2f;
+		orientMe(angle);
+		break;
+	}
+
+	glutPostRedisplay();
+}
+
+void myKeyboard(unsigned char key, int x, int y) {
+	switch (key)
+	{
+	case 'w':
+		moveMeFlat(20);
+		glutPostRedisplay();
+		break;
+	case 's':
+		moveMeFlat(-20);
+		glutPostRedisplay();
+		break;
+	case 'a':
+		cameraX--;
+		cameraX--;
+		glutPostRedisplay();
+		break;
+	case 'd':
+		cameraX++;
+		cameraX++;
+		glutPostRedisplay();
+		break;
+	default:
+		break;
+	}
+}
+
+void moveMeFlat(int i) {
+	x = x + i * (lx) * 0.1;
+	z = z + i * (lz) * 0.1;
+}
+
+void moveMeStrafe(int i) {
+
+}
+
+void orientMe(float ang) {
+	lx = sin(ang);
+	lz = -cos(ang);
+}
+
