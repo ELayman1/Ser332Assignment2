@@ -2,7 +2,7 @@
 // Elizabeth Layman, Erik Isaacson, Jacob Janas
 
 #include "stdafx.h"
-#include "GL\glut.h"
+#include "glut.h"
 #include "math.h"
 
 #define PI 3.14159265
