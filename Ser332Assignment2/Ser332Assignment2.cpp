@@ -2,9 +2,8 @@
 // Elizabeth Layman, Erik Isaacson, Jacob Janas
 
 #include "stdafx.h"
-#include <glut.h>
+#include "glut.h"
 #include <math.h>
-
 
 void display();
 void resizeWindow(int newWidth, int newHeight);
@@ -19,10 +18,10 @@ int height = 700;
 
 float cameraY = 5.0f;
 float cameraX = 0.0f;
-float cameraZ = 0.0f;
+float cameraZ = -50.0f;
 
 float x = 0.0f, y = 1.75f, z = 0.0f;
-float lx = 0.0f, ly = 0.0f, lz = -1.0f;
+float lx = 0.0f, ly = 0.0f, lz = 1.0f;
 
 float posX = 0.0f;
 
@@ -36,8 +35,7 @@ float rotAngle = 0;
 
 bool rise = true;
 
-
-void main(int argc, char ** argv) {
+int main(int argc, char ** argv) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
@@ -51,7 +49,7 @@ void main(int argc, char ** argv) {
 	glutKeyboardFunc(myKeyboard);
 	glutReshapeFunc(resizeWindow);
 	glutMainLoop();
-
+	return(0);
 }
 
 void resizeWindow(int newWidth, int newHeight) {
@@ -97,7 +95,7 @@ void display() {
 
 
 	//Color: Brown
-	glColor3f(0.4f, 0.2f, 0.0f);
+	glColor3f(0.65f, 0.50f, 0.39f);
 
 	//Draw Room Floor
 	glBegin(GL_QUADS);
@@ -126,6 +124,7 @@ void display() {
 	glVertex3f(100.0f, 1.0f, 100.0f);
 	glEnd();
 
+	//---Added-Image-------------------------
 	//Top Left(Trapezoid 1 Blue)
 	glShadeModel(GL_FLAT);
 	glColor3f(.13, .70, .66);
@@ -812,19 +811,17 @@ void display() {
 	glEnd();
 
 
-	glClearColor(0.4f, 0.4f, 0.4f, 0.0f);
-
 	glPushMatrix();
 	glTranslatef(posX, 0, 0);
 	//Table Top
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.4f, 0.2f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(-5.0f + posX, 4.0f, -4.0f);
 	glVertex3f(5.0f + posX, 4.0f, -4.0f);
 	glVertex3f(5.0f + posX, 4.0f, 4.0f);
 	glVertex3f(-5.0f + posX, 4.0f, 4.0f);
 	glEnd();
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.45f, 0.25f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(-5.0f + posX, 4.0f, -4.0f);
 	glVertex3f(5.0f + posX, 4.0f, -4.0f);
@@ -837,7 +834,7 @@ void display() {
 	glVertex3f(5.0f + posX, 4.5f, 4.0f);
 	glVertex3f(-5.0f + posX, 4.5f, 4.0f);
 	glEnd();
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.43f, 0.23f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(5.0f + posX, 4.0f, 4.0f);
 	glVertex3f(5.0f + posX, 4.0f, -4.0f);
@@ -850,7 +847,7 @@ void display() {
 	glVertex3f(-5.0f + posX, 4.5f, -4.0f);
 	glVertex3f(-5.0f + posX, 4.5f, 4.0f);
 	glEnd();
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.4f, 0.2f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(-5.0f + posX, 4.5f, -4.0f);
 	glVertex3f(5.0f + posX, 4.5f, -4.0f);
@@ -1033,14 +1030,14 @@ void display() {
 	glTranslatef(60.0f, 0.0f, 0.0f);
 	glRotatef(rotAngle, 0, 1, 1);
 	//Table Top
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.4f, 0.2f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(-5.0f, 4.0f, -4.0f);
 	glVertex3f(5.0f, 4.0f, -4.0f);
 	glVertex3f(5.0f, 4.0f, 4.0f);
 	glVertex3f(-5.0f, 4.0f, 4.0f);
 	glEnd();
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.45f, 0.25f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(-5.0f, 4.0f, -4.0f);
 	glVertex3f(5.0f, 4.0f, -4.0f);
@@ -1053,7 +1050,7 @@ void display() {
 	glVertex3f(5.0f, 4.5f, 4.0f);
 	glVertex3f(-5.0f, 4.5f, 4.0f);
 	glEnd();
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.43f, 0.23f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(5.0f, 4.0f, 4.0f);
 	glVertex3f(5.0f, 4.0f, -4.0f);
@@ -1066,7 +1063,7 @@ void display() {
 	glVertex3f(-5.0f, 4.5f, -4.0f);
 	glVertex3f(-5.0f, 4.5f, 4.0f);
 	glEnd();
-	glColor3f(0.0f, 0.0f, 0.0f);
+	glColor3f(0.4f, 0.2f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(-5.0f, 4.5f, -4.0f);
 	glVertex3f(5.0f, 4.5f, -4.0f);
@@ -1230,8 +1227,12 @@ void display() {
 
 	rotAngle += .5;
 
-	// Viewport 1: Right
-	glViewport(width * .25, 0, width, height);
+	//---------------------------------------
+
+	glClearColor(0.4f, 0.4f, 0.4f, 0.0f);
+
+	// Viewport 2: Right
+	glViewport(width * .75, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(left, right, bottom, top);
