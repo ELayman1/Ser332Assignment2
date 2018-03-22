@@ -794,7 +794,7 @@ void display() {
 	glVertex2f(-0.5f, -0.5f);
 	glEnd();
 
-	glutPostRedisplay();
+	//glutPostRedisplay();
 	glutSwapBuffers();
 
 }
