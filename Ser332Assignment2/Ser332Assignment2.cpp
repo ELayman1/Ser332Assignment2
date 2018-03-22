@@ -2,8 +2,10 @@
 // Elizabeth Layman, Erik Isaacson, Jacob Janas
 
 #include "stdafx.h"
-#include "glut.h"
-#include <math.h>
+#include "GL\glut.h"
+#include "math.h"
+
+#define PI 3.14159265
 
 void display();
 void resizeWindow(int newWidth, int newHeight);
@@ -32,6 +34,7 @@ float right, top = 1;
 float scaleFactor = 1;
 float angle = 0;
 float rotAngle = 0;
+float turn = 0;
 
 bool rise = true;
 
@@ -336,6 +339,44 @@ void display() {
 	glVertex3f(-100.0f, 30.0f, 100.0f);
 	glVertex3f(-100.0f, 1.0f, 100.0f);
 	glEnd();
+
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(1.0);
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	for (int i = 0; i <= 1000; i++) {
+		glVertex3f(-100.0f, 15.0f, 0.0f);
+		glVertex3f(-100.0f, 15.0f + (10.0f * sin(i * (2 * PI / 1000))), 0.0f + (10.0f * cos(i * (2 * PI / 1000))));
+	}
+	glEnd();
+	
+	//Minute hand
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glBegin(GL_QUADS);
+	glVertex3f(-100.0f, 15.0f, 1.0f);
+	glPushMatrix();
+	glRotatef(turn, 1, 0, 0);
+	glVertex3f(-100.0f, 15.0f, -1.0f);
+	glVertex3f(-100.0f, 25.0f, -1.0f);
+	glVertex3f(-100.0f, 25.0f, 1.0f);
+	glPopMatrix();
+	glEnd();
+
+	turn = turn + .6;
+
+	//Hour hand
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_QUADS);
+	glVertex3f(-100.0f, 15.0f, 1.0f);
+	glVertex3f(-100.0f, 15.0f, -1.0f);
+	glVertex3f(-100.0f, 10.0f, -1.0f);
+	glVertex3f(-100.0f, 10.0f, 1.0f);
+	glEnd();
+	
+	
+
+	//Color: Grey
+	glColor3f(0.75f, 0.75f, 0.75f);
 
 	//Draw Room Wall 4
 	glBegin(GL_QUADS);
@@ -1241,7 +1282,6 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glColor3f(1.0f, 1.0f, 1.0f);
-
 	glBegin(GL_QUADS);
 	glVertex2f(-0.5f, 0.5f);
 	glVertex2f(0.5f, 0.5f);
